@@ -1,0 +1,70 @@
+<div class="page-header">
+    <h1>Nilai Bobot Alternatif</h1>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <form class="form-inline">
+            <input type="hidden" name="m" value="rel_alternatif" />
+            <div class="form-group">
+                <input class="form-control" type="text" name="q" value="<?= isset($_GET['q']) ? $_GET['q'] : '' ?>" placeholder="Pencarian..." />
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>Kode</th>
+                    <th>Nama Alternatif</th>
+                    <?php foreach (($KRITERIA ?? []) as $key => $val) : ?>
+                        <th><?= $val ?></th>
+                    <?php endforeach ?>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <?php
+            // ===== FIX LOGIC SAFETY =====
+            $data = get_rel_alternatif();
+            $data = is_array($data) ? $data : [];
+
+            $ALTERNATIF = is_array($ALTERNATIF ?? null) ? $ALTERNATIF : [];
+            $SUB = is_array($SUB ?? null) ? $SUB : [];
+
+            foreach ($data as $key => $val) :
+                $val = is_array($val) ? $val : [];
+            ?>
+                <tr>
+                    <td><?= $key ?></td>
+
+                    <td>
+                        <?= $ALTERNATIF[$key] ?? 'Alternatif tidak ditemukan' ?>
+                    </td>
+
+                    <?php foreach ($val as $k => $v) : ?>
+                        <td>
+                            <?php
+                            if (!empty($v) && isset($SUB[$v]['nama'])) {
+                                echo $SUB[$v]['nama'];
+                            } else {
+                                echo 'data belum diubah';
+                            }
+                            ?>
+                        </td>
+                    <?php endforeach ?>
+
+                    <td>
+                        <a class="btn btn-xs btn-warning" href="?m=rel_alternatif_ubah&ID=<?= $key ?>">
+                            <span class="glyphicon glyphicon-edit"></span> Ubah
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+        </table>
+    </div>
+</div>
